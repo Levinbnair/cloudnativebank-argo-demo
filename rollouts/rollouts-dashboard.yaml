@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: argo-rollouts-dashboard
+  labels:
+    app: argo-rollouts-dashboard
+spec:
+  ports:
+    - name: dashboard
+      port: 3100
+      targetPort: 3100
+  selector:
+    app: argo-rollouts-dashboard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argo-rollouts-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: argo-rollouts-dashboard
+  template:
+    metadata:
+      labels:
+        app: argo-rollouts-dashboard
+    spec:
+      containers:
+        - name: argo-rollouts-dashboard
+          image: quay.io/argoproj/kubectl-argo-rollouts:v1.6.3
+          args:
+            - dashboard
+          ports:
+            - containerPort: 3100
